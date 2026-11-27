@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Floatwork, silk marbled by you</title>
+    <meta name="description" content="Float ink on a marbling bath, pull it into a pattern, and lay the silk. Every Floatwork scarf is marbled by the person who buys it." />
+    <meta name="theme-color" content="#d8dee0" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+  </head>
+  <body>
+    <header class="top" id="top">
+      <a class="wordmark" href="#stage" aria-label="Floatwork, back to the bath">Floatwork</a>
+      <a class="toplink" href="#how">How it works</a>
+    </header>
+
+    <main>
+      <section class="stage" id="stage" data-mode="bath" aria-label="The marbling bath">
+        <canvas id="gl" aria-label="Marbling bath. Tap to float ink, drag to pull it." role="img"></canvas>
+        <svg class="ghost" id="ghost" aria-hidden="true"></svg>
+        <div class="fallback" id="fallback" hidden>
+          <canvas id="fallbackArt" aria-hidden="true"></canvas>
+          <div class="fallback-copy">
+            <p class="fallback-title" id="fallbackTitle">This bath needs WebGL2.</p>
+            <p id="fallbackText">Your browser cannot run the marbling bath, so here is a scarf marbled earlier. Try a recent Chrome, Safari, Edge or Firefox to float your own.</p>
+            <button class="btn" id="fallbackRetry" type="button" hidden>Refill the bath</button>
+          </div>
+        </div>
+
+        <p class="hint" id="hint" aria-live="polite">Float some ink.</p>
+        <p class="caption" id="caption" aria-live="polite"></p>
+
+        <div class="tray" id="tray">
+          <div class="tray-row tools" role="toolbar" aria-label="Inks and tools">
+            <div class="group inks" role="radiogroup" aria-label="Ink">
+              <button class="cell ink" type="button" role="radio" data-ink="0" aria-label="Indigo" aria-checked="true"><span class="dot" style="--c: #24406e"></span><span class="lbl">Indigo</span></button>
+              <button class="cell ink" type="button" role="radio" data-ink="1" aria-label="Madder" aria-checked="false"><span class="dot" style="--c: #b23a2e"></span><span class="lbl">Madder</span></button>
+              <button class="cell ink" type="button" role="radio" data-ink="2" aria-label="Ochre" aria-checked="false"><span class="dot" style="--c: #d9a441"></span><span class="lbl">Ochre</span></button>
+              <button class="cell ink" type="button" role="radio" data-ink="3" aria-label="Lamp black" aria-checked="false"><span class="dot" style="--c: #1b1a19"></span><span class="lbl">Black</span></button>
+              <button class="cell ink" type="button" role="radio" data-ink="4" aria-label="Clear ring" aria-checked="false"><span class="dot clear"></span><span class="lbl">Clear</span></button>
+            </div>
+            <div class="group tools-g" role="radiogroup" aria-label="Tool">
+              <button class="cell tool" type="button" role="radio" data-tool="drop" aria-label="Drop" aria-checked="true">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5c-2.6 4-5 6.9-5 10a5 5 0 0 0 10 0c0-3.1-2.4-6-5-10z" /></svg><span class="lbl">Drop</span>
+              </button>
+              <button class="cell tool" type="button" role="radio" data-tool="stylus" aria-label="Stylus" aria-checked="false">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.5 3.5l2 2L8 18l-3.5 1.5L6 16z" /><path d="M4.5 19.5l1.2-1.2" /></svg><span class="lbl">Stylus</span>
+              </button>
+              <button class="cell tool" type="button" role="radio" data-tool="comb" aria-label="Comb" aria-checked="false">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18" /><path d="M5 6v12M9 6v12M13 6v12M17 6v12M21 6v12" /></svg><span class="lbl">Comb</span>
+              </button>
+            </div>
+          </div>
+          <div class="tray-row actions">
+            <button class="btn ghost-btn" id="undo" type="button" disabled>Undo</button>
+            <button class="btn ghost-btn" id="fresh" type="button">Fresh bath</button>
+            <button class="btn primary" id="lay" type="button" disabled>Lay the silk</button>
+          </div>
+        </div>
+
+        <div class="scarf-frame" id="scarfFrame" aria-hidden="true"></div>
+        <div class="grab" id="grab" aria-hidden="true"></div>
+
+        <aside class="ticket" id="ticket" aria-label="Your scarf" hidden>
+          <div class="tag">
+            <span class="hole" aria-hidden="true"></span>
+            <p class="tag-brand">Floatwork</p>
+            <p class="tag-lot">Lot <span id="lot">000-000</span></p>
+            <hr />
+            <p class="tag-label">Ink, measured on this silk</p>
+            <ul class="recipe" id="recipe"></ul>
+            <p class="tag-bare" id="bare"></p>
+            <hr />
+            <dl class="tag-spec">
+              <div><dt>Silk</dt><dd>Crepe de chine</dd></div>
+              <div><dt>Size</dt><dd>90 x 90 cm, hand-rolled hem</dd></div>
+              <div><dt>Price</dt><dd>$185</dd></div>
+            </dl>
+            <div class="tag-actions">
+              <button class="btn primary" id="bag" type="button">Add to bag</button>
+              <button class="btn" id="save" type="button">Save the print</button>
+              <button class="btn ghost-btn" id="again" type="button">Marble another</button>
+            </div>
+            <p class="tag-fine">Demo. Nothing is charged or sent.</p>
+          </div>
+        </aside>
+      </section>
+
+      <section class="read how" id="how">
+        <h2 class="sec">How it works</h2>
+        <p class="lead">Marbling is printing from water. The pattern exists for a few minutes on the bath, and the silk takes it once.</p>
+        <ol class="steps">
+          <li>
+            <span class="num">1</span>
+            <h3>Float</h3>
+            <p>Ink is dropped onto a bath of water thickened with carrageenan, a seaweed extract. Each drop spreads into a ring and pushes the drops before it outward, so rings nest inside rings.</p>
+          </li>
+          <li>
+            <span class="num">2</span>
+            <h3>Draw</h3>
+            <p>A stylus or a comb pulled through the surface drags the rings into veins, feathers and chevrons. The colors move without sinking, and they barely blend.</p>
+          </li>
+          <li>
+            <span class="num">3</span>
+            <h3>Print</h3>
+            <p>Silk treated with alum is laid on the surface and lifted off with the whole pattern in it. The bath is skimmed clean afterwards, so no print can be made twice.</p>
+          </li>
+        </ol>
+      </section>
+
+      <section class="read inks-info" id="inks">
+        <h2 class="sec">The four inks</h2>
+        <ul class="ink-list">
+          <li><span class="swatch" style="--c: #24406e"></span><div><h3>Indigo</h3><p>Indigo comes from the leaves of plants such as Indigofera tinctoria, and the blue only appears when the dissolved dye meets the air.</p></div></li>
+          <li><span class="swatch" style="--c: #b23a2e"></span><div><h3>Madder</h3><p>Madder red comes from the root of the madder plant, and its colorant, alizarin, was the first natural dye to be made synthetically, in 1868.</p></div></li>
+          <li><span class="swatch" style="--c: #d9a441"></span><div><h3>Ochre</h3><p>Yellow ochre is clay colored by iron oxide, and people have painted with it for tens of thousands of years.</p></div></li>
+          <li><span class="swatch" style="--c: #1b1a19"></span><div><h3>Lamp black</h3><p>Lamp black is soot gathered from burning oil, the same carbon that gives Chinese ink sticks their depth.</p></div></li>
+        </ul>
+      </section>
+
+      <section class="read care" id="care">
+        <h2 class="sec">Care</h2>
+        <ul class="care-list">
+          <li>Hand wash in cool water with a mild soap, or dry clean.</li>
+          <li>Do not wring. Roll it in a towel and dry it flat, out of direct sun.</li>
+          <li>Iron on the reverse at a low silk setting.</li>
+          <li>Every dye fades in strong light over years, so store it folded in a drawer.</li>
+        </ul>
+      </section>
+    </main>
+
+    <footer class="foot">
+      <p class="foot-mark">Floatwork</p>
+      <p>Concept project. Floatwork is a fictional brand.</p>
+      <p><a href="https://michaelshadpour.com" target="_blank" rel="noopener">Design and build: Michael Shadpour</a></p>
+    </footer>
+
+    <dialog class="notice" id="notice" aria-labelledby="noticeTitle">
+      <p class="notice-text" id="noticeTitle">Demo. Nothing is charged or sent.</p>
+      <p class="notice-sub">Floatwork is a fictional studio, so your scarf stays here on the page. You can still save the print.</p>
+      <form method="dialog"><button class="btn primary" type="submit">Close</button></form>
+    </dialog>
+
+    <script type="module" src="./src/main.ts"></script>
+  </body>
+</html>

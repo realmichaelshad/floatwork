@@ -1,0 +1,29 @@
+{
+  "name": "floatwork",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Marble your own silk scarf on a live bath of floating ink.",
+  "license": "MIT",
+  "author": "Michael Shadpour (https://michaelshadpour.com)",
+  "homepage": "https://michaelshadpour.com/work/floatwork",
+  "repository": "github:realmichaelshad/floatwork",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 5311 --strictPort",
+    "build": "tsc --noEmit && vite build",
+    "preview": "node scripts/serve.mjs",
+    "test": "vitest run",
+    "test:e2e": "npm run build && playwright test",
+    "perf": "node scripts/perf.mjs"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64",
+    "typescript": "^7.0.2",
+    "vite": "^6.4.6",
+    "vitest": "^5.1.1"
+  },
+  "dependencies": {
+    "@fontsource/libre-caslon-display": "^5.3.0",
+    "@fontsource/libre-caslon-text": "^5.3.0"
+  }
+}
